@@ -56,7 +56,7 @@ public class CloudApiClient {
         Map<String, String> hashMap = new HashMap<>();
         hashMap.put("accessKey", accessKey);
         //一定不能直接发送
-//        hashMap.put("secretKey", secretKey);
+        //hashMap.put("secretKey", secretKey);
         hashMap.put("nonce", RandomUtil.randomNumbers(4));
         hashMap.put("body", body);
         hashMap.put("timestamp", String.valueOf(System.currentTimeMillis()/1000));

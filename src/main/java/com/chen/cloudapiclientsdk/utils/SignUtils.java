@@ -11,9 +11,9 @@ public class SignUtils {
 
     /**
      * 生成签名
-     * @param body
-     * @param secretKey
-     * @return
+     * @param body 用户参数
+     * @param secretKey 密钥
+     * @return 不可解密的值
      */
     public static String getSign(String body, String secretKey){
         Digester md5 = new Digester(DigestAlgorithm.SHA256);
