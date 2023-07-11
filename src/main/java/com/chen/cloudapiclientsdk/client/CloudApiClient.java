@@ -68,7 +68,6 @@ public class CloudApiClient {
     public String getUserNameByPost(User user) {
         String json = JSONUtil.toJsonStr(user);
         HttpResponse httpResponse = HttpRequest.post("http://localhost:8123/api/name/user")
-                .charset(StandardCharsets.UTF_8)
                 .addHeaders(getHeaderMap(json))
                 .body(json)
                 .execute();
