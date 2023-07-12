@@ -72,8 +72,8 @@ public class CloudApiClient {
                 .body(json)
                 .execute();
         System.out.println(httpResponse.getStatus());
-        String body = httpResponse.body();
-        System.out.println(body);
-        return body;
+        String result = httpResponse.body();
+        System.out.println(result);
+        return result;
     }
 }
