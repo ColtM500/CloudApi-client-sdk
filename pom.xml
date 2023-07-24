@@ -14,7 +14,7 @@
 
     <groupId>com.chen</groupId>
     <artifactId>CloudApi-client-sdk</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 
     <name>CloudApi-client-sdk</name>
     <description>Demo project for Spring Boot</description>
