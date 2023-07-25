@@ -5,7 +5,9 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import com.chen.cloudapiclientsdk.model.User;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -20,8 +22,7 @@ import static com.chen.cloudapiclientsdk.utils.SignUtils.genSign;
  */
 public class CloudApiClient {
 
-    public static String GATEWAY_HOST = "http://localhost:8090";
-
+    private static final String GATEWAY_HOST = "http://localhost:8090";
 
     private String accessKey;
 
@@ -32,30 +33,45 @@ public class CloudApiClient {
         this.secretKey = secretKey;
     }
 
-    public void setGatewayHost(String gatewayHost) {
-        GATEWAY_HOST = gatewayHost;
+    public String getNameByGet(String name) {
+        //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("name", name);
+        String result = HttpUtil.get(GATEWAY_HOST + "/api/name/", paramMap);
+        System.out.println(result);
+        return result;
     }
 
-
-    private Map<String, String> getHeaderMap(String body, String method) throws UnsupportedEncodingException {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("accessKey", accessKey);
-        map.put("nonce", RandomUtil.randomNumbers(10));
-        map.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
-        map.put("sign", genSign(body, secretKey));
-        body = URLUtil.encode(body, CharsetUtil.CHARSET_UTF_8);
-        map.put("body", body);
-        map.put("method", method);
-        return map;
+    public String getNameByPost(String name) {
+        //可以单独传入http参数，这样参数会自动做URL编码，拼接在URL中
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("name", name);
+        String result = HttpUtil.post(GATEWAY_HOST + "/api/name/", paramMap);
+        System.out.println(result);
+        return result;
     }
 
-    public String invokeInterface(String params, String url, String method) throws UnsupportedEncodingException {
-        HttpResponse httpResponse = HttpRequest.post(GATEWAY_HOST + url)
-                .header("Accept-Charset", CharsetUtil.UTF_8)
-                .addHeaders(getHeaderMap(params, method))
-                .body(params)
+    private Map<String, String> getHeaderMap(String body) {
+        Map<String, String> hashMap = new HashMap<>();
+        hashMap.put("accessKey", accessKey);
+        // 一定不能直接发送
+//        hashMap.put("secretKey", secretKey);
+        hashMap.put("nonce", RandomUtil.randomNumbers(4));
+        hashMap.put("body", body);
+        hashMap.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+        hashMap.put("sign", genSign(body, secretKey));
+        return hashMap;
+    }
+
+    public String getUsernameByPost(User user) {
+        String json = JSONUtil.toJsonStr(user);
+        HttpResponse httpResponse = HttpRequest.post(GATEWAY_HOST + "/api/name/user")
+                .addHeaders(getHeaderMap(json))
+                .body(json)
                 .execute();
-        return JSONUtil.formatJsonStr(httpResponse.body());
+        System.out.println(httpResponse.getStatus());
+        String result = httpResponse.body();
+        System.out.println(result);
+        return result;
     }
-
 }
